@@ -41,6 +41,8 @@ public class CtfController {
         return ResponseEntity.ok(challenges);
     }
 
+
+
     @GetMapping("/test")
     public ResponseEntity<String> testEndpoint() {
         return ResponseEntity.ok("CTF API is up and running!");
@@ -54,7 +56,6 @@ public class CtfController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody RegistrationRequest request) {
-        System.out.println(request);
         String result = ctfService.registerUser(request.getUsername(), request.getPassword());
         return ResponseEntity.ok(result);
     }
