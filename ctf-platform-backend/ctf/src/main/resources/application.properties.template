@@ -1,0 +1,35 @@
+# ===============================
+# DATABASE CONFIGURATION
+# ===============================
+spring.datasource.url=jdbc:mysql://localhost:3306/ctf_db
+spring.datasource.username=root
+# --- IMPORTANT ---
+# Replace the placeholder below with your own local MySQL password.
+# Do NOT commit your real password.
+spring.datasource.password=<YOUR_DATABASE_PASSWORD>
+
+# ===============================
+# JPA/HIBERNATE CONFIGURATION
+# ===============================
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+
+# ===============================
+# SERVER PORT
+# ===============================
+server.port=8080
+
+# ===============================
+# CTF CHALLENGE CONFIGURATION
+# ===============================
+ctf.challenges[0].level=1
+ctf.challenges[0].flag=flag{welcome_to_the_game}
+ctf.challenges[0].points=100
+
+ctf.challenges[1].level=2
+ctf.challenges[1].flag=flag{docker_is_fun}
+ctf.challenges[1].points=150
+
+ctf.challenges[2].level=3
+ctf.challenges[2].flag=flag{sql_mastery_achieved}
+ctf.challenges[2].points=200
