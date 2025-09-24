@@ -21,17 +21,31 @@ function App() {
   
   const handleLogin = async (username, password, setError) => {
     try {
-      const leaderboardResponse = await fetch(`${API_BASE_URL}/leaderboard`);
-      if (!leaderboardResponse.ok) throw new Error("Could not connect to the server.");
+      const leaderboardResponse = await fetch(`${API_BASE_URL}/api/leaderboard`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'cors', // explicitly enable CORS
+      });
       
-      const users = await leaderboardResponse.json();
+      
+      if (!leaderboardResponse.ok) throw new Error("Could not connect to the server.");
+      // console.log(leaderboardResponse)
+      const text = await leaderboardResponse.clone().text();
+
+      
+      const users = JSON.parse(text);
+      // console.log(users); // see what the server actually returned
       const user = users.find(u => u.username === username && u.password === password);
+     
 
       if (user) {
-        const challengesResponse = await fetch(`${API_BASE_URL}/challenges`);
+        const challengesResponse = await fetch(`${API_BASE_URL}/api/challenges`);
         if (!challengesResponse.ok) throw new Error("Could not fetch challenges.");
+
+        const challangeText = await challengesResponse.text();
         
-        const challengesData = await challengesResponse.json();
+        const challengesData = JSON.parse(challangeText);
+
         setChallenges(challengesData);
 
         const userData = {
@@ -50,7 +64,7 @@ function App() {
 
   const handleRegister = async (username, password, setError) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/register`, {
+        const response = await fetch(`${API_BASE_URL}/api/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, password }),
@@ -81,7 +95,7 @@ function App() {
   
   const handleFlagSubmit = async (level, flag) => {
     try {
-        const response = await fetch(`${API_BASE_URL}/submit`, {
+        const response = await fetch(`${API_BASE_URL}/api/submit`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

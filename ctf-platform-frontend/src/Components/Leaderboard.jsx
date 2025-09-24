@@ -10,7 +10,7 @@ const Leaderboard = ({ currentUser, onClose }) => {
     const fetchLeaderboard = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_BASE_URL}/leaderboard`);
+        const response = await fetch(`${API_BASE_URL}/api/leaderboard`);
         if (!response.ok) {
           throw new Error('Failed to fetch leaderboard data.');
         }
