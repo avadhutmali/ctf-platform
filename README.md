@@ -4,7 +4,7 @@
 
 This project provides a complete platform for running CTF events. It features a "Candy Crush-style" level map where users can progress through challenges, submit flags, and see their scores update in real-time on a public leaderboard.
 
-## ✨ Features
+##  Features
 
 * **Dynamic Challenge Management**: Challenges are managed via a simple configuration file in the backend, allowing for easy updates without database queries.
 * **Full User Authentication**: Secure user registration and login system based on usernames.
@@ -23,7 +23,7 @@ This project provides a complete platform for running CTF events. It features a 
 | **MySQL** | **JavaScript (ES6+)**|
 | **Maven** | **npm** |
 
-## 🚀 Getting Started
+## Getting Started
 
 To get a local copy up and running, follow these simple steps.
 
@@ -34,7 +34,7 @@ To get a local copy up and running, follow these simple steps.
 * **MySQL Server** & **MySQL Workbench** (or any SQL client)
 * **Node.js v18+** & **npm**
 
-### ⚙️ Backend Setup (`ctf-backend`)
+### Backend Setup (`ctf-backend`)
 
 1.  **Clone the repository:**
     ```sh
@@ -62,7 +62,7 @@ To get a local copy up and running, follow these simple steps.
         ```
     * The server will start on `http://localhost:8080`. Spring Boot will automatically create the necessary tables (`users`) in your `ctf_db` database.
 
-### 🎨 Frontend Setup (`ctf-frontend`)
+###  Frontend Setup (`ctf-frontend`)
 
 1.  **Clone the repository:**
     ```sh
@@ -82,7 +82,7 @@ To get a local copy up and running, follow these simple steps.
     * Your browser will open to `http://localhost:5173` (or another port if 5173 is busy).
     * The application is now running and connected to your local backend.
 
-## 🔗 API Endpoints
+##  API Endpoints
 
 <details>
 <summary>Click to view API Documentation</summary>
@@ -97,10 +97,11 @@ To get a local copy up and running, follow these simple steps.
 
 </details>
 
-## ☁️ Deployment
+##  Deployment
 
 The backend is configured for easy deployment. When you build the project into a `.jar` file, you can place an `application.properties` file in the same directory on your server. This external file will override the internal one, allowing you to manage production database credentials and challenge flags without rebuilding the application.
 
 ```sh
 # On your server
 java -jar ctf-platform-0.0.1-SNAPSHOT.jar
+
