@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "ctf.challenges[0].level",
+  "type": "java.lang.String",
+  "description": "A description for 'ctf.challenges[0].level'"
+}]}
