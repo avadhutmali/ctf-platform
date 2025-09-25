@@ -1,6 +1,8 @@
 package ctf.ctf.Service;
 
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -10,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ctf.ctf.Config.ChallengeConfig;
+import ctf.ctf.Config.ContestConfig;
+import ctf.ctf.Dto.ContestStatusResponse;
 import ctf.ctf.Dto.RegistrationRequest;
 import ctf.ctf.Models.Challenge;
 import ctf.ctf.Models.User;
@@ -27,6 +31,32 @@ public class CtfService {
 
     @Autowired
     private ChallengeConfig challengeConfig;
+
+    @Autowired
+    private ContestConfig contestConfig;
+
+    public ContestStatusResponse getContestStatus() {
+        Instant now = Instant.now();
+        Instant startTime = contestConfig.getStartTime();
+        Instant endTime = startTime.plus(contestConfig.getDurationMinutes(), ChronoUnit.MINUTES);
+        Instant freezeTime = endTime.minus(contestConfig.getFreezeMinutes(), ChronoUnit.MINUTES);
+
+        String status;
+        boolean isFrozen = false;
+
+        if (now.isBefore(startTime)) {
+            status = "PENDING";
+        } else if (now.isAfter(endTime)) {
+            status = "FINISHED";
+        } else if (now.isAfter(freezeTime)) {
+            status = "FROZEN";
+            isFrozen = true;
+        } else {
+            status = "RUNNING";
+        }
+
+        return new ContestStatusResponse(status, startTime, endTime, freezeTime, now, isFrozen);
+    }
 
     public String registerUser(String username, String password) {
         if (userRepository.existsByUsername(username)) {
