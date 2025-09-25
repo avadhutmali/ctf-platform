@@ -19,7 +19,6 @@ import ctf.ctf.Service.CtfService;
 
 @RestController // Marks this class as a controller that handles REST API requests.
 @RequestMapping("/api") // All endpoints in this class will start with "/api".
-@CrossOrigin(origins = "https://ctf-platform-pi.vercel.app/")
 public class CtfController {
 
     @Autowired
