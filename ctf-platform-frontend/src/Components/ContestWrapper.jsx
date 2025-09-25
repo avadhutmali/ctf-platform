@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import App from '../App'; // We will render the main App component from here
+import App from '../App';
 import { API_BASE_URL } from '../config';
 
-// A simple component to show while waiting for the server
 const LoadingScreen = () => (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-white text-2xl">
         Connecting to the contest server...
     </div>
 );
 
-// A simple component to show before the contest starts
 const PreContestScreen = ({ startTime }) => {
     const [timeRemaining, setTimeRemaining] = useState('');
 
@@ -21,7 +19,6 @@ const PreContestScreen = ({ startTime }) => {
 
             if (diff <= 0) {
                 setTimeRemaining("The contest is about to begin!");
-                // Optionally, force a page reload to enter the contest
                 setTimeout(() => window.location.reload(), 2000);
                 clearInterval(timer);
                 return;
@@ -47,7 +44,6 @@ const PreContestScreen = ({ startTime }) => {
     );
 };
 
-// A simple component for when the contest is over
 const PostContestScreen = () => (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white">
         <h1 className="text-5xl font-bold">The Contest is Over!</h1>
@@ -64,57 +60,46 @@ const ContestWrapper = () => {
     useEffect(() => {
         const fetchStatus = async () => {
             try {
-                const response = await fetch(`https://ctf-platform-production-4683.up.railway.app/api/contest/status`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    mode: 'cors', // explicitly enable CORS
-                });
-                console.log("here is the error")
+                const response = await fetch(`${API_BASE_URL}/api/contest/status`);
                 if (!response.ok) {
-                    throw new Error('Could not fetch contest status.');
+                    throw new Error('Could not fetch contest status from the server.');
                 }
                 const data = await response.json();
                 setContestStatus(data);
+                if (loading) setLoading(false);
             } catch (err) {
                 setError(err.message);
-                // Stop polling on error
                 return true; 
             }
             return false;
         };
 
-        // Fetch immediately on load
         fetchStatus();
-
-        // Then, poll every 30 seconds to keep the time synced
         const interval = setInterval(async () => {
             const hasError = await fetchStatus();
-            if (hasError) {
-                clearInterval(interval);
-            }
+            if (hasError) clearInterval(interval);
         }, 30000);
         
-        setLoading(false);
-
-        // Cleanup interval on component unmount
         return () => clearInterval(interval);
     }, []);
 
-    if (loading || !contestStatus) {
+    if (loading) {
         return <LoadingScreen />;
     }
 
     if (error) {
-        return <div className="flex items-center justify-center min-h-screen bg-red-900 text-white text-xl">{error}</div>;
+        return <div className="flex items-center justify-center min-h-screen bg-red-900 text-white text-xl p-8 text-center">{error}</div>;
     }
 
-    // Conditional rendering based on the status from the backend
+    if (!contestStatus) {
+        return <LoadingScreen />;
+    }
+    
     switch (contestStatus.status) {
         case 'PENDING':
             return <PreContestScreen startTime={contestStatus.startTime} />;
         case 'RUNNING':
         case 'FROZEN':
-            // If the contest is live, render the main app and pass the status down
             return <App contestStatus={contestStatus} />;
         case 'FINISHED':
             return <PostContestScreen />;

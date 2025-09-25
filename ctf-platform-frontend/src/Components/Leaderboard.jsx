@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_BASE_URL } from '../config';
 
-const Leaderboard = ({ currentUser, onClose }) => {
+const Leaderboard = ({ currentUser, onClose, isFrozen }) => {
   const [leaderboard, setLeaderboard] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -28,12 +28,19 @@ const Leaderboard = ({ currentUser, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-gray-900 text-white p-4 sm:p-8 z-50 flex flex-col">
-      <header className="flex justify-between items-center mb-8">
+      <header className="flex justify-between items-center mb-4">
         <h1 className="text-4xl font-bold text-yellow-400">Leaderboard</h1>
         <button onClick={onClose} className="px-4 py-2 bg-blue-600 rounded-md hover:bg-blue-700">
           &larr; Back
         </button>
       </header>
+
+      {/* This is the key part. It will now display when isFrozen is true. */}
+      {isFrozen && (
+          <div className="w-full max-w-4xl mx-auto p-4 mb-4 text-center bg-cyan-800/50 border border-cyan-500 rounded-lg">
+              <p className="font-bold text-cyan-300">The leaderboard is now frozen! Final ranks will be revealed after the contest ends.</p>
+          </div>
+      )}
       
       <div className="flex-grow overflow-y-auto">
         {loading && <p className="text-center">Loading...</p>}

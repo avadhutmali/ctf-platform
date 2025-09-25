@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import LoginScreen from './Components/LoginScreen';
-import GameMap from './Components/GameMap';
-import FlagSubmissionModal from './Components/FlagSubmissionModal';
-import Leaderboard from './Components/Leaderboard';
+import LoginScreen from './components/LoginScreen';
+import GameMap from './components/GameMap';
+import FlagSubmissionModal from './components/FlagSubmissionModal';
+import Leaderboard from './components/Leaderboard';
 import { API_BASE_URL } from './config';
 
-function App() {
+// App now correctly receives contestStatus from its parent (ContestWrapper)
+function App({ contestStatus }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [challenges, setChallenges] = useState([]);
@@ -21,31 +22,17 @@ function App() {
   
   const handleLogin = async (username, password, setError) => {
     try {
-      const leaderboardResponse = await fetch(`${API_BASE_URL}/api/leaderboard`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-        mode: 'cors', // explicitly enable CORS
-      });
-      
-      
+      const leaderboardResponse = await fetch(`${API_BASE_URL}/api/leaderboard`);
       if (!leaderboardResponse.ok) throw new Error("Could not connect to the server.");
-      // console.log(leaderboardResponse)
-      const text = await leaderboardResponse.clone().text();
-
       
-      const users = JSON.parse(text);
-      // console.log(users); // see what the server actually returned
+      const users = await leaderboardResponse.json();
       const user = users.find(u => u.username === username && u.password === password);
-     
 
       if (user) {
         const challengesResponse = await fetch(`${API_BASE_URL}/api/challenges`);
         if (!challengesResponse.ok) throw new Error("Could not fetch challenges.");
-
-        const challangeText = await challengesResponse.text();
         
-        const challengesData = JSON.parse(challangeText);
-
+        const challengesData = await challengesResponse.json();
         setChallenges(challengesData);
 
         const userData = {
@@ -116,7 +103,7 @@ function App() {
             const challenge = challenges.find(c => c.level === level);
             const updatedUser = {
                 ...currentUser,
-                score: currentUser.score + challenge.points,
+                score: currentUser.score + (challenge ? challenge.points : 0),
                 solvedLevels: [...currentUser.solvedLevels, level],
             };
             setCurrentUser(updatedUser);
@@ -138,6 +125,8 @@ function App() {
         <Leaderboard 
           currentUser={currentUser} 
           onClose={handleHideLeaderboard} 
+          // This is the critical line that passes the frozen status down.
+          isFrozen={contestStatus.isFrozen}
         />
       ) : !currentUser ? (
         <LoginScreen 
@@ -151,6 +140,8 @@ function App() {
           score={currentUser.score}
           solvedLevels={currentUser.solvedLevels}
           challenges={challenges}
+          isFrozen={contestStatus.isFrozen}
+          endTime={contestStatus.endTime}
           onLevelClick={handleLevelClick}
           onLogout={handleLogout}
           onShowLeaderboard={handleShowLeaderboard}
