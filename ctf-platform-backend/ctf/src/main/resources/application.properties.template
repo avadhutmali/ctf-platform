@@ -19,6 +19,14 @@ spring.jpa.show-sql=true
 # ===============================
 server.port=8080
 
+# ===================================
+# CONTEST TIMING CONFIGURATION
+# ===================================
+# Format: YYYY-MM-DDTHH:MM:SSZ (Z is for UTC time)
+CTF_CONTEST_START_TIME="2025-09-25T13:00:00+05:30"
+CTF_CONTEST_DURATION_MINUTES="120"
+CTF_CONTEST_FREEZE_MINUTES="15"
+
 # ===============================
 # CTF CHALLENGE CONFIGURATION
 # ===============================
