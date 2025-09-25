@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
         // This rule applies to ALL paths that start with "/api/"
         registry.addMapping("/api/**")
             // This allows your local development server AND your deployed frontend
-            .allowedOrigins("http://localhost:5173", frontendUrl , "https://ctf-platform-pi.vercel.app/")
+            .allowedOrigins("*")
             // This allows the browser to send standard request types
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             // This allows all headers (like Content-Type, Authorization, etc.)
