@@ -64,7 +64,12 @@ const ContestWrapper = () => {
     useEffect(() => {
         const fetchStatus = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/contest/status`);
+                const response = await fetch(`https://ctf-platform-production-4683.up.railway.app/api/contest/status`, {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors', // explicitly enable CORS
+                });
+                console.log("here is the error")
                 if (!response.ok) {
                     throw new Error('Could not fetch contest status.');
                 }
